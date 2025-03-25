@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Forensics & Autopsy Analysis</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(0, 123, 255, 0.9);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ffdd57;
+            transform: translateY(-3px);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 0.5rem;
+            top: 100%;
+            left: 0;
+            min-width: 150px;
+            z-index: 1;
+            animation: fadeIn 0.5s ease-in-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 0.5rem;
+            display: block;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background: rgba(241, 241, 241, 0.7);
+        }
+
+        /* Main Content */
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-in-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #007bff;
+            animation: fadeInLeft 1s ease-in-out;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.6;
+            animation: fadeInRight 1s ease-in-out;
+        }
+
+        /* File Upload Section */
+        .upload-section {
+            text-align: center;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            animation: bounce 2s infinite;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-input-label:hover {
+            background: linear-gradient(135deg, #0056b3, #003d80);
+            transform: scale(1.05);
+        }
+
+        button[type="submit"] {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.3s ease;
+            animation: fadeInUp 1s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: scale(1.05);
+        }
+
+        /* Result Message */
+        #result {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        #result p {
+            margin: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">Cyber Forensics</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <div class="dropdown">
+                <a href="#about">About</a>
+                <div class="dropdown-content">
+                    <a href="#autopsy">Autopsy</a>
+                    <a href="#cyber-forensics">Cyber Forensics</a>
+                </div>
+            </div>
+            <a href="#upload">Upload</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home" class="section">
+            <h2>Welcome to Cyber Forensics</h2>
+            <p>
+                Cyber forensics is the practice of collecting, analyzing, and preserving digital evidence
+                to investigate and prevent cybercrimes. Our tools and techniques help uncover hidden data,
+                analyze suspicious activities, and generate detailed forensic reports.
+            </p>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <h2>About</h2>
+            <p>
+                Learn more about the tools and techniques used in cyber forensics and autopsy analysis.
+            </p>
+            <div id="autopsy">
+                <h3>Autopsy</h3>
+                <p>
+                    Autopsy is a digital forensics platform used to analyze disk images and recover deleted files.
+                    It provides a graphical interface for forensic investigators to examine file systems, emails,
+                    and other digital artifacts.
+                </p>
+            </div>
+            <div id="cyber-forensics">
+                <h3>Cyber Forensics</h3>
+                <p>
+                    Cyber forensics involves the investigation of digital devices and networks to uncover evidence
+                    of cybercrimes. It includes data recovery, malware analysis, and network forensics.
+                </p>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section id="upload" class="section upload-section">
+            <h2>Upload Excel File</h2>
+            <form id="uploadForm">
+                <!-- File Input with Custom Styling -->
+                <input class="file-input-label" type="file" id="fileInput" name="file" accept=".xlsx, .xls" required>
+                
+                <!-- Submit Button -->
+                <button type="submit">Upload and Generate Report</button>
+            </form>
+            <div id="result"></div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <h2>Contact Us</h2>
+            <p>
+                For inquiries or support, please email us at
+                <a href="mailto:support@cyberforensics.com">support@cyberforensics.com</a>.
+            </p>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('result');
+
+            if (fileInput.files.length === 0) {
+                resultDiv.innerHTML = '<p style="color: red;">Please select a file.</p>';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                resultDiv.innerHTML = '<p>Processing... Please wait.</p>';
+                const response = await fetch('/uploads', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Forensic_Analysis_Report.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    resultDiv.innerHTML = '<p style="color: green;">Report generated successfully. Download started.</p>';
+                } else {
+                    const errorData = await response.json();
+                    resultDiv.innerHTML = `<p style="color: red;">Error: ${errorData.error}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
