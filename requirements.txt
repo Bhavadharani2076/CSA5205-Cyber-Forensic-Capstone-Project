@@ -1,0 +1,12 @@
+Flask
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+nltk
+spacy
+wordcloud
+textblob
+fpdf
+Pillow
