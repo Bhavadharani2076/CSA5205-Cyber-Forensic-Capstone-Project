@@ -1,6 +1,5 @@
 Flask
 pandas
-numpy
 matplotlib
 seaborn
 scikit-learn
@@ -12,5 +11,7 @@ fpdf
 Pillow
 gunicorn
 openpyxl
-spacy
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.6.0/en_core_web_sm-3.6.0.tar.gz
+numpy==1.23.5
+spacy==3.5.0
+thinc==8.1.10
