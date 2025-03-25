@@ -12,6 +12,6 @@ Pillow
 gunicorn
 openpyxl
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.6.0/en_core_web_sm-3.6.0.tar.gz
-numpy==1.23.5
-spacy==3.5.0
-thinc==8.1.10
+numpy
+spacy
+thinc
